@@ -1,7 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -31,8 +30,21 @@ public class DepartInfoServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+		String targetUrl = "/views/di-insert";
+		if("/depart/insert".equals(request.getRequestURI())) {
+			DepartInfoVO diVO = new DepartInfoVO();
+			diVO.setDiCode(request.getParameter("diCode"));
+			diVO.setDiName(request.getParameter("diName"));
+			diVO.setDiEtc(request.getParameter("diEtc"));
+			String msgCode = "ss01";
+			if(diService.insertDepartInfo(diVO)!=1) {
+				msgCode = "err01";
+			}
+			request.setAttribute("msgCode", msgCode);
+		}
+		RequestDispatcher rd = request.getRequestDispatcher(targetUrl);
+		rd.forward(request, response);
 	}
 
 }

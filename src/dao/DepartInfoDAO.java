@@ -8,4 +8,5 @@ import vo.DepartInfoVO;
 public interface DepartInfoDAO {
 
 	public List<DepartInfoVO> selectDepartInfoList(DepartInfoVO diVO);
+	public int insertDepartInfo(DepartInfoVO diVO);
 }

@@ -18,4 +18,8 @@ public class DepartInfoServiceImpl implements DepartInfoService {
 		DepartInfoService diService = new DepartInfoServiceImpl();
 		System.out.println(diService.selectDepartInfoList(null));
 	}
+	@Override
+	public int insertDepartInfo(DepartInfoVO diVO) {
+		return diDAO.insertDepartInfo(diVO);
+	}
 }

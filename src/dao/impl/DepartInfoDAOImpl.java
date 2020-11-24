@@ -20,7 +20,8 @@ public class DepartInfoDAOImpl implements DepartInfoDAO {
 		Connection con = null;
 		try {
 			QueryRunner qr = new QueryRunner();
-			String sql = "select di_num as diNum, di_name as diName, di_code as diCode, di_etc as diEtc from depart_info";
+			String sql = "select di_num as diNum, di_name as diName, di_code as diCode, di_etc as diEtc"
+					+ " ,(select count(1) from employee e where e.di_num=di.di_num) as diCnt from depart_info di";
 			ResultSetHandler<List<DepartInfoVO>> rsh = new BeanListHandler<>(DepartInfoVO.class);
 			con = DBCon.getCon();
 			return qr.query(con, sql, rsh);
@@ -38,7 +39,46 @@ public class DepartInfoDAOImpl implements DepartInfoDAO {
 
 	public static void main(String[] args) {
 		DepartInfoDAO diDAO = new DepartInfoDAOImpl();
+		DepartInfoVO diVO = new DepartInfoVO();
+		diVO.setDiCode("04");
+		diVO.setDiName("영업팀");
+		diVO.setDiEtc("얘넨 맨날 늦게 오더라");
 		System.out.println(diDAO.selectDepartInfoList(null));
 	}
 
+	@Override
+	public int insertDepartInfo(DepartInfoVO diVO) {
+		String sql = "insert into depart_info(di_num, di_code, di_name, di_etc) ";
+		sql += " values(seq_di_no.nextval, ?,?,?)";
+		Connection con = null;
+		try {
+			con = DBCon.getCon();
+			QueryRunner qr = new QueryRunner();
+			Object[] strs = new Object[3];
+			strs[0] = diVO.getDiCode();
+			strs[1] = diVO.getDiName();
+			strs[2] = diVO.getDiEtc();
+			return qr.update(con, sql, strs);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				DbUtils.close(con);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+
 }
+
+
+
+
+
+
+
+
+
+
